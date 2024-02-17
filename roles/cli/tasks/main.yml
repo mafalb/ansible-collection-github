@@ -10,7 +10,7 @@
 # On older Debian-ish systems /etc/apt/keyrings does not exist.
 #
 - name: Directory for PGP keys is present
-  when: "{{ ansible_pkg_mgr == 'apt'}}"
+  when: ansible_pkg_mgr == 'apt'
   ansible.builtin.file:
     path: "{{ cli_key_dest | dirname }}"
     state: directory
@@ -25,7 +25,7 @@
 #
 - name: The PGP key is present
   ansible.builtin.copy:
-    src: githubcli-archive-keyring.gpg
+    src: githubcli-archive-keyring.gpg.asc
     dest: "{{ cli_key_dest }}"
     mode: '0644'
 
