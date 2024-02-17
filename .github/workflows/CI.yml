@@ -5,9 +5,9 @@ name: CI
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
-    - '**'
+      - '**'
     tags-ignore:
-    - '*'
+      - '*'
   pull_request:
   schedule:
     - cron: '18 18 * * 6'
