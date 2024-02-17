@@ -67,7 +67,7 @@ jobs:
         working-directory: ansible_collections/mafalb/github
         run: |
           source ~/.virtualenvs/ansible/bin/activate
-          molecule -c molecule/resources/molecule.yml -e ".env-$CI_TARGET.yml" test
+          molecule -c molecule/molecule.yml -e ".env-$CI_TARGET.yml" test
 
   molecule:
 
@@ -124,7 +124,7 @@ jobs:
         working-directory: ansible_collections/mafalb/github
         run: |
           source ~/.virtualenvs/ansible/bin/activate
-          molecule -c molecule/resources/molecule.yml -e ".env-$CI_TARGET.yml" test
+          molecule -c molecule/molecule.yml -e ".env-$CI_TARGET.yml" test
 
   allsuccess:
     if: success() || failure()

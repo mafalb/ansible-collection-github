@@ -69,7 +69,6 @@ issues: https://github.com/mafalb/github/issues
 build_ignore:
   # https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html#ignoring-files-and-folders
   - .gitignore
-  - .github
 
 # A dict controlling use of manifest directives used in building the collection artifact. The key 'directives' is a
 # list of MANIFEST.in style
