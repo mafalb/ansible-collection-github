@@ -3,7 +3,7 @@
 # see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt
 ---
 
-cli_key_dest: /etc/apt/keyrings/gh-cli.gpg.asc
+cli_key_dest: /etc/apt/keyrings/gh-cli.gpg
 cli_repo_dest: gh-cli
 
 ...

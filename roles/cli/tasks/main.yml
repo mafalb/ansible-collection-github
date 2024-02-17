@@ -7,6 +7,15 @@
   ansible.builtin.include_vars:
     file: "{{ ansible_pkg_mgr }}.yml"
 
+# On older Debian-ish systems /etc/apt/keyrings does not exist.
+#
+- name: Directory for PGP keys is present
+  when: "{{ ansible_pkg_mgr == 'apt'}}"
+  ansible.builtin.file:
+    path: "{{ cli_key_dest | dirname }}"
+    state: directory
+    mode: '0755'
+
 # https://cli.github.com/packages/githubcli-archive-keyring.gpg
 # sha256sum:a5eb97c717ec3438bb94d465554e3560f8732403c28870780f779b8ab89975ea
 # We hold a local copy to avoid remote access which could fail.
@@ -16,7 +25,7 @@
 #
 - name: The PGP key is present
   ansible.builtin.copy:
-    src: githubcli-archive-keyring.gpg.asc
+    src: githubcli-archive-keyring.gpg
     dest: "{{ cli_key_dest }}"
     mode: '0644'
 
@@ -24,7 +33,7 @@
   ansible.builtin.include_tasks:
     file: "{{ ansible_pkg_mgr }}.yml"
 
-- name: Package gh-cli is installed
+- name: Package gh is installed
   ansible.builtin.package:
     name: gh
 
