@@ -1,0 +1,10 @@
+# Copyright (c) Markus Falb <markus.falb@mafalb.at>
+# GNU General Public License v3.0+
+# see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt
+---
+
+cli_key_dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-gh-cli
+cli_repo_template: gh-cli.repo.j2
+cli_repo_dest: /etc/yum.repos.d/gh-cli.repo
+
+...

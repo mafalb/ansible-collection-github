@@ -1,0 +1,24 @@
+# vim: set ft=yaml ts=2 expandtab:
+#
+# Copyright (c) Markus Falb <markus.falb@mafalb.at>
+# GNU General Public License v3.0+
+# see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt
+---
+
+argument_specs:
+  main:
+    short_description: Install github cli software (gh)
+    description: Install github cli software (gh)
+
+    options:
+      state:
+        description:
+          - "[present | absent ]"
+        type: str
+        choices:
+          - absent
+          - present
+        default:
+          - present
+
+...

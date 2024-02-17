@@ -1,0 +1,21 @@
+# Copyright (c) Markus Falb <markus.falb@mafalb.at>
+# GNU General Public License v3.0+
+# see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt
+---
+
+# WTF. why?
+# ansible_architecture is not good enough. Would be too easy.
+#
+- name: Get the architecture
+  ansible.builtin.command:
+    cmd: dpkg --print-architecture
+  changed_when: false
+  register: __deb_arch
+
+- name: The apt repository is present
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ __deb_arch.stdout }} signed-by={{ cli_key_dest }}] https://cli.github.com/packages stable main"
+    filename: "{{ cli_repo_dest }}"
+    state: present
+
+...

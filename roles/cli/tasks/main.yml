@@ -1,0 +1,31 @@
+# Copyright (c) Markus Falb <markus.falb@mafalb.at>
+# GNU General Public License v3.0+
+# see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt
+---
+
+- name: Get OS specific variables
+  ansible.builtin.include_vars:
+    file: "{{ ansible_pkg_mgr }}.yml"
+
+# https://cli.github.com/packages/githubcli-archive-keyring.gpg
+# sha256sum:a5eb97c717ec3438bb94d465554e3560f8732403c28870780f779b8ab89975ea
+# We hold a local copy to avoid remote access which could fail.
+#
+# Convert it into armored version
+# $ gpg --keyring ./githubcli-archive-keyring.gpg --no-default-keyring --export -a >githubcli-archive-keyring.gpg.asc
+#
+- name: The PGP key is present
+  ansible.builtin.copy:
+    src: githubcli-archive-keyring.gpg.asc
+    dest: "{{ cli_key_dest }}"
+    mode: '0644'
+
+- name: The repository is configured
+  ansible.builtin.include_tasks:
+    file: "{{ ansible_pkg_mgr }}.yml"
+
+- name: Package gh-cli is installed
+  ansible.builtin.package:
+    name: gh
+
+...

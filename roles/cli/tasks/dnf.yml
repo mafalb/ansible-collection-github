@@ -1,0 +1,19 @@
+# Copyright (c) Markus Falb <markus.falb@mafalb.at>
+# GNU General Public License v3.0+
+# see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt
+---
+
+- name: Key is added to rpm
+  ansible.builtin.rpm_key:
+    key: "{{ cli_key_dest }}"
+    fingerprint: 2C61 0620 1985 B60E 6C7A  C873 23F3 D4EA 7571 6059
+
+- name: Repository is configured
+  ansible.builtin.yum_repository:
+    name: gh-cli
+    description: Packages for the GitHub CLI
+    file: "{{ cli_repo_dest }}"
+    baseurl: https://cli.github.com/packages/rpm
+    gpgkey: file://{{ cli_key_dest }}
+
+...
