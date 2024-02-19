@@ -15,59 +15,27 @@ jobs:
     with:
       targeted_branch: ${{ inputs.targeted_branch }}
 
+  gpgkey:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download gpgkey
+        env:
+          GPGKEY: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+          SHASUM: a5eb97c717ec3438bb94d465554e3560f8732403c28870780f779b8ab89975ea
+          KEYID: 2C6106201985B60E6C7AC87323F3D4EA75716059
+        run: curl -sO "$GPGKEY"
+      - name: Check if key has changed
+        run: | 
+          gpg --show-keys $("$GPGKEY" | basename)
+          gpg --show-keys $("$GPGKEY" | basename) | grep "$KEYID"
+          cat $("$GPGKEY" | basename) | sha256sum
+          cat $("$GPGKEY" | basename) | sha256sum | grep "$SHASUM" 
+          
   ansiblecollection:
     needs: selectbranch
     uses: mafalb/workflows/.github/workflows/reusable-ansiblecollection.yml@prod
     with:
       targeted_branch: ${{ needs.selectbranch.outputs.ref }}
-
-  # CentOS systemd container does not run on Ubuntu 22
-  # Test it on Ubuntu 20
-  #
-  # On the old podman there are 2 default routes created.
-  # But with CentOS 7 it is working so far. We'll see.
-  #
-  molecule-cgroupv1:
-
-    runs-on: ubuntu-20.04
-    needs: selectbranch
-    strategy:
-      fail-fast: false
-      matrix:
-        target:
-          - centos7
-    env:
-      CI_TARGET: ${{ matrix.target }}
-      PY_COLORS: 1
-      ANSIBLE_FORCE_COLOR: 1
-
-    steps:
-
-      - name: Checkout workflows
-        uses: actions/checkout@v4
-        with:
-          repository: mafalb/workflows
-          path: workflows
-          ref: ${{ needs.selectbranch.outputs.ref }}
-
-      - name: Install Ansible
-        uses: mafalb/workflows/.github/actions/installansible@prod
-        with:
-          extra_packages: 'molecule-plugins[podman],molecule'
-          python_version: 3.11
-          ansible_version: 2.16
-          ref: dev  # FIX
-
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          path: ansible_collections/mafalb/github
-
-      - name: molecule default scenario
-        working-directory: ansible_collections/mafalb/github
-        run: |
-          source ~/.virtualenvs/ansible/bin/activate
-          molecule -c molecule/molecule.yml -e "molecule/env-$CI_TARGET.yml" test
 
   molecule:
 
@@ -80,6 +48,7 @@ jobs:
           - fedora38
           - fedora39
           - fedora40
+          - centos7
           - c8s
           - c9s
           - alma8
@@ -133,6 +102,7 @@ jobs:
       joblist: ${{ toJSON(needs) }}
     needs:
       - selectbranch
+      - gpgkey
       - ansiblecollection
       - molecule
 ...
