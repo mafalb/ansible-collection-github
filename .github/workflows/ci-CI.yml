@@ -10,11 +10,6 @@ on:  # yamllint disable-line rule:truthy
 
 jobs:
 
-  selectbranch:
-    uses: mafalb/workflows/.github/workflows/reusable-selectbranch.yml@prod
-    with:
-      targeted_branch: ${{ inputs.targeted_branch }}
-
   gpgkey:
     runs-on: ubuntu-latest
 
@@ -34,6 +29,11 @@ jobs:
           gpg --show-keys gpgkey.gpg | grep "$KEYID"
           sha256sum gpgkey.gpg
           sha256sum gpgkey.gpg | grep "$SHASUM"
+
+  selectbranch:
+    uses: mafalb/workflows/.github/workflows/reusable-selectbranch.yml@prod
+    with:
+      targeted_branch: ${{ inputs.targeted_branch }}
 
   ansiblecollection:
     needs: selectbranch
@@ -105,8 +105,8 @@ jobs:
     with:
       joblist: ${{ toJSON(needs) }}
     needs:
-      - selectbranch
       - gpgkey
+      - selectbranch
       - ansiblecollection
       - molecule
 ...
