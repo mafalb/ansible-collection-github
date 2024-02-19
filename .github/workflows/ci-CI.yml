@@ -29,12 +29,12 @@ jobs:
         env:
           SHASUM: a5eb97c717ec3438bb94d465554e3560f8732403c28870780f779b8ab89975ea
           KEYID: 2C6106201985B60E6C7AC87323F3D4EA75716059
-        run: | 
+        run: |
           gpg --show-keys gpgkey.gpg
           gpg --show-keys gpgkey.gpg | grep "$KEYID"
           sha256sum gpgkey.gpg
-          sha256sum gpgkey.gpg | grep "$SHASUM" 
-          
+          sha256sum gpgkey.gpg | grep "$SHASUM"
+
   ansiblecollection:
     needs: selectbranch
     uses: mafalb/workflows/.github/workflows/reusable-ansiblecollection.yml@prod
